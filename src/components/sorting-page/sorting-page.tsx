@@ -59,6 +59,16 @@ export const SortingPage: React.FC = () => {
     ascending ? setLoaderAscending(true) : setLoaderDescending(true);
   }
 
+  function updateColumnElements(columnElements: JSX.Element[], index: number, elState: ElementStates) {
+    resultNumber[index].state = elState;
+    columnElements = resultNumber.map(item => {
+      return (
+          <Column index={item.number} state={item.state} key={v4()} extraClass={styles.sort__column}/>
+      )
+    })
+    setElements(columnElements);
+  }
+
   async function selectionSort(array: number[], ascending = true) {
     changeLoaderState(ascending);
     ascending ? setDisabledBtn("bubble") : setDisabledBtn("selection");
@@ -80,31 +90,12 @@ export const SortingPage: React.FC = () => {
 
     for (let i = 0; i < array.length; i++) {
       let indexMin = i;
-      resultNumber[indexMin].state = ElementStates.Changing;
-      columnElements = resultNumber.map(item => {
-        return (
-            <Column index={item.number} state={item.state} key={v4()} extraClass={styles.sort__column}/>
-        )
-      })
-      setElements(columnElements);
+      updateColumnElements(columnElements, indexMin, ElementStates.Changing);
       for (let j = i + 1; j < array.length; j++) {
         await timeout(1000);
-        resultNumber[j].state = ElementStates.Changing;
-        columnElements = resultNumber.map(item => {
-          return (
-              <Column index={item.number} state={item.state} key={v4()} extraClass={styles.sort__column}/>
-          )
-        })
-        setElements(columnElements);
-
+        updateColumnElements(columnElements, j, ElementStates.Changing);
         if (j - i > 1) {
-          resultNumber[j - 1].state = ElementStates.Default;
-          columnElements = resultNumber.map(item => {
-            return (
-                <Column index={item.number} state={item.state} key={v4()} extraClass={styles.sort__column}/>
-            )
-          })
-          setElements(columnElements);
+          updateColumnElements(columnElements, j - 1, ElementStates.Default);
         }
 
         if (ascending) {
@@ -116,8 +107,6 @@ export const SortingPage: React.FC = () => {
         if (boolean) {
           indexMin = j;
         }
-
-
       }
       swap(array, i, indexMin);
       await timeout(1000);
@@ -170,14 +159,8 @@ export const SortingPage: React.FC = () => {
           boolean = array[j + 1] > array[j]
         }
         if (boolean) {
-          resultNumber[j].state = ElementStates.Changing;
-          resultNumber[j + 1].state = ElementStates.Changing;
-          columnElements = resultNumber.map(item => {
-            return (
-                <Column index={item.number} state={item.state} key={v4()} extraClass={styles.sort__column}/>
-            )
-          })
-          setElements(columnElements);
+          updateColumnElements(columnElements, j, ElementStates.Changing);
+          updateColumnElements(columnElements, j + 1, ElementStates.Changing);
 
           swap(array, j, j + 1);
           await timeout(1000);
@@ -238,10 +221,12 @@ export const SortingPage: React.FC = () => {
                         onChange={handleChange}/>
           </div>
           <div className={`${styles.sort__flexBox} ${styles.sort__btnBox}`}>
-            <Button text={"По возрастанию"} sorting={Direction.Ascending} style={{width: "205px"}} type={"button"} isLoader={loaderAscending}
+            <Button text={"По возрастанию"} sorting={Direction.Ascending} style={{width: "205px"}} type={"button"}
+                    isLoader={loaderAscending}
                     disabled={(elements.length <= 0) || (disabledBtn === "selection")}
                     onClick={(value === "selection") ? () => selectionSort(resultArr, true) : () => bubbleSort(resultArr, true)}/>
-            <Button text={"По убыванию"} sorting={Direction.Descending} style={{width: "205px"}} type={"button"} isLoader={loaderDescending}
+            <Button text={"По убыванию"} sorting={Direction.Descending} style={{width: "205px"}} type={"button"}
+                    isLoader={loaderDescending}
                     disabled={(elements.length <= 0) || (disabledBtn === "bubble")}
                     onClick={(value === "selection") ? () => selectionSort(resultArr, false) : () => bubbleSort(resultArr, false)}/>
           </div>
