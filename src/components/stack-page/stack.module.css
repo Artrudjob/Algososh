@@ -1,0 +1,26 @@
+.stack {
+    width: 85%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+}
+
+.stack__flexBox {
+    width: 750px;
+    display: flex;
+    justify-content: space-between;
+    align-self: center;
+}
+
+.stack__inputBox {
+    width: 377px;
+}
+
+.stack__itemsBox {
+    width: 100%;
+    margin-top: 48px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 66px 16px;
+}
