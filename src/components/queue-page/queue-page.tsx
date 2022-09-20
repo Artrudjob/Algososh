@@ -29,6 +29,7 @@ export class Queue extends React.Component<TProps, TState> {
             loader: ""
         })
         this._timeout = this._timeout.bind(this);
+        this._updateCircleElement = this._updateCircleElement.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.createItemsArr = this.createItemsArr.bind(this);
         this.arraySize = this.arraySize.bind(this);
@@ -58,6 +59,19 @@ export class Queue extends React.Component<TProps, TState> {
 
     _timeout(ms: number) {
         return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    _updateCircleElement(elIndex: number, letter: string, elStates: ElementStates, top: string, bottom: string) {
+        this.resultChar[elIndex].char = letter;
+        this.resultChar[elIndex].state = elStates;
+        this.resultChar[elIndex].head = top;
+        this.resultChar[elIndex].tail = bottom;
+        this.circleElements = this.resultChar.map((item => {
+            return (
+                <Circle index={item.index} letter={item.char} head={item.head} tail={item.tail}
+                        state={item.state} key={v4()}/>
+            )
+        }))
     }
 
     handleChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -94,29 +108,11 @@ export class Queue extends React.Component<TProps, TState> {
             this.setState({loader: "enqueue"});
             this.setState({disable: "enqueue"});
             if (this.stepAdd === 0) {
-                this.resultChar[this.stepAdd].char = item;
-                this.resultChar[this.stepAdd].state = ElementStates.Changing;
-                this.resultChar[this.stepAdd].head = "head";
-                this.resultChar[this.stepAdd].tail = "tail";
-                this.circleElements = this.resultChar.map((item => {
-                    return (
-                        <Circle index={item.index} letter={item.char} head={item.head} tail={item.tail}
-                                state={item.state} key={v4()}/>
-                    )
-                }))
+                this._updateCircleElement(this.stepAdd, item, ElementStates.Changing, "head", "tail");
                 this.setState({elements: this.circleElements});
             } else {
-                this.resultChar[this.stepAdd].char = item;
-                this.resultChar[this.stepAdd].state = ElementStates.Changing;
-                this.resultChar[this.stepAdd].head = "";
-                this.resultChar[this.stepAdd].tail = "tail";
                 this.resultChar[this.stepAdd - 1].tail = "";
-                this.circleElements = this.resultChar.map((item => {
-                    return (
-                        <Circle index={item.index} letter={item.char} head={item.head} tail={item.tail}
-                                state={item.state} key={v4()}/>
-                    )
-                }))
+                this._updateCircleElement(this.stepAdd, item, ElementStates.Changing, "", "tail");
                 this.setState({elements: this.circleElements});
             }
             await this._timeout(500);
@@ -141,30 +137,12 @@ export class Queue extends React.Component<TProps, TState> {
             this.setState({loader: "dequeue"});
             this.setState({disable: "dequeue"});
             if (this.stepAdd - 1 === 0) {
-                this.resultChar[this.stepRemove].char = "";
-                this.resultChar[this.stepRemove].state = ElementStates.Default;
-                this.resultChar[this.stepRemove].head = "";
-                this.resultChar[this.stepRemove].tail = "";
-                this.circleElements = this.resultChar.map((item => {
-                    return (
-                        <Circle index={item.index} letter={item.char} head={item.head} tail={item.tail}
-                                state={item.state} key={v4()}/>
-                    )
-                }))
+                this._updateCircleElement(this.stepRemove, "", ElementStates.Default, "", "");
                 this.stepAdd = 0;
                 this.stepRemove = -1;
                 this.setState({elements: this.circleElements});
             } else if (this.stepAdd === this.stepRemove + 1) {
-                this.resultChar[this.stepAdd - 1].char = "";
-                this.resultChar[this.stepAdd - 1].state = ElementStates.Changing;
-                this.resultChar[this.stepAdd - 1].head = "head";
-                this.resultChar[this.stepAdd - 1].tail = "";
-                this.circleElements = this.resultChar.map((item => {
-                    return (
-                        <Circle index={item.index} letter={item.char} head={item.head} tail={item.tail}
-                                state={item.state} key={v4()}/>
-                    )
-                }));
+                this._updateCircleElement(this.stepAdd-1, "", ElementStates.Changing, "head", "");
                 this.setState({elements: this.circleElements});
                 await this._timeout(500)
                 this.resultChar[this.stepAdd - 1].state = ElementStates.Default;
@@ -174,9 +152,9 @@ export class Queue extends React.Component<TProps, TState> {
                                 state={item.state} key={v4()}/>
                     )
                 }));
+                this.setState({elements: this.circleElements});
                 this.stepAdd = 0;
                 this.stepRemove = -1;
-                this.setState({elements: this.circleElements});
             } else {
                 this.resultChar[this.stepRemove].char = "";
                 this.resultChar[this.stepRemove].state = ElementStates.Default;
@@ -235,7 +213,7 @@ export class Queue extends React.Component<TProps, TState> {
                                 onClick={() => this.dequeue()}/>
                     </div>
                     <Button type={"button"} text={"Очистить"} linkedList={"small"}
-                            disabled={(this.stepAdd === 0) && (this.stepRemove === 0) || (this.state.disable !== "")}
+                            disabled={(this.state.disable !== "")}
                             onClick={() => this.clearQueue()}/>
                 </div>
                 <div className={styles.queue__itemsBox}>
