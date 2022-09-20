@@ -1,0 +1,26 @@
+.queue {
+    width: 85%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+}
+
+.queue__flexBox {
+    width: 750px;
+    display: flex;
+    justify-content: space-between;
+    align-self: center;
+}
+
+.queue__inputBox {
+    width: 377px;
+}
+
+.queue__itemsBox {
+    width: 100%;
+    margin-top: 78px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 66px 16px;
+}
