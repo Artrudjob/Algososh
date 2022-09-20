@@ -62,7 +62,13 @@ export class Stack extends React.Component<TProps, TState> {
     if (item.length === 0) {
       return null;
     } else {
+      const arrSize = this.arraySize(this.resultChar);
       this.setState({disable: "push"});
+
+      if (arrSize >= 1) {
+        this.resultChar[arrSize-1].head = "";
+      }
+
       this.resultChar.push({char: item, state: ElementStates.Changing, head: "top", index: ""});
 
       let circleElement = this.resultChar.map((item, index) => {
@@ -72,11 +78,10 @@ export class Stack extends React.Component<TProps, TState> {
       })
       this.setState({elements: circleElement});
 
-      const arrSize = this.arraySize(this.resultChar);
-
       await this._timeout(500);
       this.setState({disable: ""});
-      this.resultChar[arrSize-1].state = ElementStates.Default;
+
+      this.resultChar[arrSize].state = ElementStates.Default;
 
       circleElement = this.resultChar.map((item, index) => {
         return (
@@ -84,12 +89,6 @@ export class Stack extends React.Component<TProps, TState> {
         )
       })
       this.setState({elements: circleElement});
-
-      for (let i = 0; i < arrSize; i++) {
-        if (i < arrSize) {
-          this.resultChar[arrSize-1].head = "";
-        }
-      }
     }
   }
 
@@ -103,7 +102,6 @@ export class Stack extends React.Component<TProps, TState> {
     } else {
       this.setState({disable: "pop"});
       this.resultChar[arrSize-1].state = ElementStates.Changing;
-      this.resultChar[arrSize-1].head = "top";
       let circleElement = this.resultChar.map((item, index) => {
         return (
             <Circle index={index} head={item.head} letter={item.char} state={item.state} key={v4()} />

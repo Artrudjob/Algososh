@@ -38,10 +38,8 @@ export class Queue extends React.Component<TProps, TState> {
         this.resultChar = [];
         this.stepAdd = 0;
         this.stepRemove = 0;
+        this.circleElements = [];
     }
-
-    stepAdd = 0;
-    stepRemove = 0;
 
     resultChar: {
         char: string,
@@ -50,7 +48,8 @@ export class Queue extends React.Component<TProps, TState> {
         tail: string,
         index: number
     }[] = [];
-
+    stepAdd = 0;
+    stepRemove = 0;
     circleElements: JSX.Element[] = [];
 
     componentDidMount() {
@@ -200,12 +199,11 @@ export class Queue extends React.Component<TProps, TState> {
                             key={v4()}/>
                 )
             }))
+            this.stepRemove++;
             this.setState({elements: this.circleElements});
             this.setState({disable: ""});
             this.setState({loader: ""});
             this.setState({disable: ""});
-
-            this.stepRemove++;
         }
     }
 
