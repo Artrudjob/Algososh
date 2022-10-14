@@ -3,14 +3,13 @@ import styles from "./list.module.css"
 import {SolutionLayout} from "../ui/solution-layout/solution-layout";
 import {Input} from "../ui/input/input";
 import {Button} from "../ui/button/button";
-import {ElementStates} from "../../types/element-states";
-
-import LinkedList from "./linkedList";
-import {getRandomNumber, timeout} from "../../utils/utils";
 import {Circle} from "../ui/circle/circle";
-import {v4} from "uuid";
 import {ArrowIcon} from "../ui/icons/arrow-icon";
+import {getRandomNumber, timeout} from "../../utils/utils";
+import {v4} from "uuid";
 import LinkedListNode from "./linkedListNode";
+import {ElementStates} from "../../types/element-states";
+import LinkedList from "./linkedList";
 
 type TResultNodes = {
   head: string | React.ReactElement | null;
@@ -176,6 +175,8 @@ export const ListPage: React.FC = () => {
         linkedList.deleteHead();
         updateResultNodes(linkedList.toArray());
         updateCircleElement(resultNodes);
+        setLoaderDelHead(false);
+        setDisabledBtn("disabledOff");
         return
       }
 
@@ -345,14 +346,18 @@ export const ListPage: React.FC = () => {
   async function deleteByIndex(index: string) {
     setLoaderDelByIndex(true);
     setDisabledBtn("disabledOn");
+
     const arraySize = linkedList.toArray().length;
     const ind = Number(index);
-    const circleTail = <Circle letter={resultNodes[ind].letter} state={ElementStates.Changing} isSmall={true} />
-    let count = 0;
 
     if (ind > arraySize - 1) {
+      setLoaderDelByIndex(false);
+      setDisabledBtn("disabledOff");
       throw new Error("Введенное значение не должны быть больше, чем количество узлов");
     }
+
+    const circleTail = <Circle letter={resultNodes[ind].letter} state={ElementStates.Changing} isSmall={true} />
+    let count = 0;
 
     if (arraySize === 1) {
       resultNodes[ind].state = ElementStates.Changing;

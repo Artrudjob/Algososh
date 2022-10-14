@@ -1,5 +1,6 @@
 import React from "react";
 import styles from "./sorting-page.module.css";
+import {getRandomNumber} from "../../utils/utils";
 import {SolutionLayout} from "../ui/solution-layout/solution-layout";
 import {RadioInput} from "../ui/radio-input/radio-input";
 import {Button} from "../ui/button/button";
@@ -27,10 +28,6 @@ export const SortingPage: React.FC = () => {
 
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     setValue(event.target.value)
-  }
-
-  function getRandomNumber(min: number, max: number): number {
-    return Math.floor(Math.random() * (max - min) + min);
   }
 
   function randomArr() {
