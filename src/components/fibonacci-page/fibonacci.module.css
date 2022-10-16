@@ -1,8 +1,9 @@
 .fibonacci__box {
-    width: 29.5%;
+    /*width: 29.5%;*/
+    width: 1240px;
     margin: 48px auto 0 auto;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
 }
 
 .fibonacci__inputBox {

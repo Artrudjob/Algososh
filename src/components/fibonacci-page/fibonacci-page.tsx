@@ -6,24 +6,19 @@ import {Button} from "../ui/button/button";
 import {Circle} from "../ui/circle/circle";
 import {ElementStates} from "../../types/element-states";
 import {v4} from "uuid";
+import {timeout} from "../../utils/utils";
 
 export const FibonacciPage: React.FC = () => {
-
     const [isValue, setValue] = React.useState<string>("");
     const [loader, setLoader] = React.useState<boolean>(false);
     const [disabled, setDisabled] = React.useState<boolean>(true);
     const [isVisible, setVisible] = React.useState<boolean>(true);
-
     const [elements, setElements] = React.useState<JSX.Element[]>([]);
 
-    function timeout(ms: number) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
-
-    function fib(n: number): number[] {
-        let arr: number[] = [0, 1];
-        for (let i = 2; i < n + 1; i++){
-            arr.push(arr[i - 2] + arr[i -1])
+    function getFibonacciNumbers(n: number): number[] {
+        let arr: number[] = [1, 1];
+        for (let i = 2; i < n + 1; i++) {
+            arr.push(arr[i - 2] + arr[i - 1])
         }
 
         return arr
@@ -46,7 +41,7 @@ export const FibonacciPage: React.FC = () => {
         setLoader(true);
         setVisible(false);
         const valueNumb = Number(isValue);
-        const arr = fib(valueNumb);
+        const arr = getFibonacciNumbers(valueNumb);
 
         let newArr: number[] = [];
         let i = 0;
@@ -67,20 +62,21 @@ export const FibonacciPage: React.FC = () => {
         setLoader(false);
     }
 
-
     return (
         <SolutionLayout title="Последовательность Фибоначчи">
-          <div className={styles.fibonacci__box}>
-            <div className={styles.fibonacci__inputBox}>
-              <Input isLimitText={true} maxLength={2} min={0} max={19} value={isValue} onChange={handleChange} type={"number"}/>
+            <div className={styles.fibonacci__box}>
+                <div className={styles.fibonacci__inputBox}>
+                    <Input isLimitText={true} maxLength={2} min={0} max={19} value={isValue} onChange={handleChange}
+                           type={"number"}/>
+                </div>
+                <Button text={"Рассчитать"} type={"button"} isLoader={loader} disabled={disabled}
+                        onClick={handleBtnClick} extraClass={"ml-6"} linkedList={"small"}/>
             </div>
-            <Button text={"Рассчитать"} type={"button"} isLoader={loader} disabled={disabled} onClick={handleBtnClick} extraClass={"mr-6"}/>
-          </div>
-          {!isVisible &&
-              <div className={styles.fibonacci__flex}>
-                  {elements}
-              </div>
-          }
+            {!isVisible &&
+                <div className={styles.fibonacci__flex}>
+                    {elements}
+                </div>
+            }
         </SolutionLayout>
     );
 };
