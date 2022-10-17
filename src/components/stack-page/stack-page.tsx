@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import styles from "./stack.module.css";
 import {ElementStates} from "../../types/element-states";
 import {SolutionLayout} from "../ui/solution-layout/solution-layout";
@@ -28,6 +28,13 @@ export const StackPage: React.FC = () => {
     const [loaderBtnClear, setLoaderBtnClear] = useState<boolean>(false);
 
     let circleElements: JSX.Element[];
+
+    useEffect(() => {
+        return () => {
+            resultChar.length = 0;
+        }
+
+    }, [])
 
     function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
         setValue(event.target.value);
