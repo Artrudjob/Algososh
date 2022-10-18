@@ -95,11 +95,7 @@ export const SortingPage: React.FC = () => {
                     updateColumnElements(columnElements, j - 1, ElementStates.Default);
                 }
 
-                if (ascending) {
-                    boolean = array[j] <= array[indexMin];
-                } else {
-                    boolean = array[j] >= array[indexMin];
-                }
+                ascending ? boolean = array[j] <= array[indexMin] : boolean = array[j] >= array[indexMin];
 
                 if (boolean) {
                     indexMin = j;
@@ -150,11 +146,8 @@ export const SortingPage: React.FC = () => {
         let boolean;
         for (let i = 0; i < array.length; i++) {
             for (let j = 0; j < array.length; j++) {
-                if (ascending) {
-                    boolean = array[j + 1] < array[j]
-                } else {
-                    boolean = array[j + 1] > array[j]
-                }
+                ascending ? boolean = array[j + 1] < array[j] : boolean = array[j + 1] > array[j];
+
                 if (boolean) {
                     updateColumnElements(columnElements, j, ElementStates.Changing);
                     updateColumnElements(columnElements, j + 1, ElementStates.Changing);
