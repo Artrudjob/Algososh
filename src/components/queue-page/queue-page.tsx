@@ -1,88 +1,59 @@
-import React from "react";
-import {SolutionLayout} from "../ui/solution-layout/solution-layout";
-import styles from "./queue.module.css"
+import React, {useEffect, useState} from "react";
+import styles from "./queue.module.css";
+import {Queue} from "./queue";
 import {Input} from "../ui/input/input";
 import {Button} from "../ui/button/button";
+import {SolutionLayout} from "../ui/solution-layout/solution-layout";
 import {ElementStates} from "../../types/element-states";
 import {Circle} from "../ui/circle/circle";
 import {v4} from "uuid";
+import {timeout} from "../../utils/utils";
 
-type TProps = {}
-type TState = {
-    value: string,
-    arrayString: string[],
-    elements: JSX.Element[],
-    visible: boolean,
-    disable: string,
-    loader: string
+type TResultChar = {
+    char: string;
+    state: ElementStates;
+    head: string;
+    tail: string;
+    index: number
 }
 
-export class Queue extends React.Component<TProps, TState> {
-    constructor(props: TProps) {
-        super(props);
-        this.state = ({
-            value: "",
-            arrayString: [],
-            visible: true,
-            elements: [],
-            disable: "",
-            loader: ""
-        })
-        this._timeout = this._timeout.bind(this);
-        this._updateCircleElement = this._updateCircleElement.bind(this);
-        this.handleChange = this.handleChange.bind(this);
-        this.createItemsArr = this.createItemsArr.bind(this);
-        this.arraySize = this.arraySize.bind(this);
-        this.enqueue = this.enqueue.bind(this);
-        this.dequeue = this.dequeue.bind(this);
-        this.clearQueue = this.clearQueue.bind(this);
-        this.resultChar = [];
-        this.stepAdd = 0;
-        this.stepRemove = 0;
-        this.circleElements = [];
+let resultChar: TResultChar[] = [];
+let stepAdd = 0;
+let stepRemove = 0;
+
+export const QueuePage: React.FC = () => {
+    /* TODO: переменная queue хука useState необходима для хранения экземпляра класса Queue, в дальнейшем её
+        состояние неизменяется
+     */
+    const [queue, setQueue] = useState(new Queue()); // eslint-disable-line
+    const [elements, setElements] = useState<JSX.Element[]>([]);
+    const [value, setValue] = useState<string>("");
+    const [disabledBtn, setDisabledBtn] = useState<string>("disableOff");
+    const [loaderBtnAdd, setLoaderBtnAdd] = useState<boolean>(false);
+    const [loaderBtnDel, setLoaderBtnDel] = useState<boolean>(false);
+
+    let circleElements: JSX.Element[];
+
+    // TODO: хук useEffect должен срабатывать только при монтировании и размантировании страницы
+    useEffect(() => {
+        createItemsArr();
+
+        return () => {
+            resultChar.length = 0;
+            stepAdd = 0;
+            stepRemove = 0;
+        }
+    }, []); // eslint-disable-line
+
+    function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
+        setValue(event.target.value);
     }
 
-    resultChar: {
-        char: string,
-        state: ElementStates,
-        head: string,
-        tail: string,
-        index: number
-    }[] = [];
-    stepAdd = 0;
-    stepRemove = 0;
-    circleElements: JSX.Element[] = [];
-
-    componentDidMount() {
-        this.setState({elements: this.createItemsArr()});
-    }
-
-    _timeout(ms: number) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
-
-    _updateCircleElement(elIndex: number, letter: string, elStates: ElementStates, top: string, bottom: string) {
-        this.resultChar[elIndex].char = letter;
-        this.resultChar[elIndex].state = elStates;
-        this.resultChar[elIndex].head = top;
-        this.resultChar[elIndex].tail = bottom;
-        this.circleElements = this.resultChar.map((item => {
-            return (
-                <Circle index={item.index} letter={item.char} head={item.head} tail={item.tail}
-                        state={item.state} key={v4()}/>
-            )
-        }))
-    }
-
-    handleChange(event: React.ChangeEvent<HTMLInputElement>) {
-        this.setState({value: event.target.value})
-    }
-
-    createItemsArr() {
+    function createItemsArr() {
         let i = 0
         while (i <= 6) {
-            this.resultChar.push({char: "", state: ElementStates.Default, head: "", tail: "", index: i});
-            this.circleElements = this.resultChar.map(item => {
+            resultChar.push({char: "", state: ElementStates.Default, head: "", tail: "", index: i});
+            circleElements = resultChar.map(item => {
                 return (
                     <Circle index={item.index} letter={item.char} head={item.head} tail={item.tail} state={item.state}
                             key={v4()}/>
@@ -90,136 +61,148 @@ export class Queue extends React.Component<TProps, TState> {
             })
             i++
         }
-        return this.circleElements;
+        setElements(circleElements);
     }
 
-    arraySize(array: {
-        char: string,
-        state: ElementStates,
-        head: string,
-        tail: string,
-        index: number
-    }[]) {
-        return array.length;
+    function updateCircleElement(
+        elIndex: number,
+        letter: string,
+        elStates: ElementStates,
+        top: string,
+        bottom: string) {
+        resultChar[elIndex].char = letter;
+        resultChar[elIndex].state = elStates;
+        resultChar[elIndex].head = top;
+        resultChar[elIndex].tail = bottom;
+        circleElements = resultChar.map((item => {
+            return (
+                <Circle index={item.index} letter={item.char} head={item.head} tail={item.tail}
+                        state={item.state} key={v4()}/>
+            )
+        }))
+        setElements(circleElements);
     }
 
-    async enqueue(item: string) {
-        if (this.stepAdd <= 6) {
-            this.setState({loader: "enqueue"});
-            this.setState({disable: "enqueue"});
-            if (this.stepAdd === 0) {
-                this._updateCircleElement(this.stepAdd, item, ElementStates.Changing, "head", "tail");
-                this.setState({elements: this.circleElements});
+    async function enqueue(item: string) {
+        if (stepAdd <= 6) {
+            setLoaderBtnAdd(true);
+            setDisabledBtn("disableOn");
+            if (stepAdd === 0) {
+                queue.enqueue(item);
+                updateCircleElement(stepAdd, item, ElementStates.Changing, "head", "tail");
             } else {
-                this.resultChar[this.stepAdd - 1].tail = "";
-                this._updateCircleElement(this.stepAdd, item, ElementStates.Changing, "", "tail");
-                this.setState({elements: this.circleElements});
+                queue.enqueue(item);
+                resultChar[stepAdd - 1].tail = "";
+                updateCircleElement(stepAdd, item, ElementStates.Changing, "", "tail");
             }
-            await this._timeout(500);
-            this.resultChar[this.stepAdd].state = ElementStates.Default;
-            this.circleElements = this.resultChar.map((item => {
+
+            await timeout(500);
+            resultChar[stepAdd].state = ElementStates.Default;
+            circleElements = resultChar.map((item => {
                 return (
                     <Circle index={item.index} letter={item.char} head={item.head} tail={item.tail} state={item.state}
                             key={v4()}/>
                 )
-            }))
-            this.stepAdd++;
-            this.setState({elements: this.circleElements});
-            this.setState({value: ""});
-            this.setState({loader: ""});
-            this.setState({disable: ""})
+            }));
+            setElements(circleElements);
+            setLoaderBtnAdd(false);
+            setDisabledBtn("disableOff");
+            setValue("");
+            stepAdd++;
         }
-
     }
 
-    async dequeue() {
-        if (this.stepRemove <= 6) {
-            this.setState({loader: "dequeue"});
-            this.setState({disable: "dequeue"});
-            if (this.stepAdd - 1 === 0) {
-                this._updateCircleElement(this.stepRemove, "", ElementStates.Default, "", "");
-                this.stepAdd = 0;
-                this.stepRemove = -1;
-                this.setState({elements: this.circleElements});
-            } else if (this.stepAdd === this.stepRemove + 1) {
-                this._updateCircleElement(this.stepAdd-1, "", ElementStates.Changing, "head", "");
-                this.setState({elements: this.circleElements});
-                await this._timeout(500)
-                this.resultChar[this.stepAdd - 1].state = ElementStates.Default;
-                this.circleElements = this.resultChar.map((item => {
+    async function dequeue() {
+        if (stepRemove <= 6) {
+            setLoaderBtnDel(true);
+            setDisabledBtn("disableOn");
+            if (stepAdd - 1 === 0) {
+                updateCircleElement(stepRemove, "", ElementStates.Default, "", "");
+                stepAdd = 0;
+                stepRemove = -1;
+                queue.clear();
+            } else if (stepAdd === stepRemove + 1) {
+                updateCircleElement(stepAdd - 1, "", ElementStates.Changing, "", "");
+
+                await timeout(500);
+                resultChar[stepAdd - 1].state = ElementStates.Default;
+                circleElements = resultChar.map((item => {
                     return (
                         <Circle index={item.index} letter={item.char} head={item.head} tail={item.tail}
                                 state={item.state} key={v4()}/>
                     )
                 }));
-                this.setState({elements: this.circleElements});
-                this.stepAdd = 0;
-                this.stepRemove = -1;
+
+                setElements(circleElements);
+                stepAdd = 0;
+                stepRemove = -1;
+                queue.clear();
             } else {
-                this.resultChar[this.stepRemove].char = "";
-                this.resultChar[this.stepRemove].state = ElementStates.Default;
-                this.resultChar[this.stepRemove].head = "";
-                this.resultChar[this.stepRemove + 1].state = ElementStates.Changing;
-                this.resultChar[this.stepRemove + 1].head = "head";
-                this.circleElements = this.resultChar.map((item => {
+                resultChar[stepRemove].char = "";
+                resultChar[stepRemove].state = ElementStates.Default;
+                resultChar[stepRemove].head = "";
+                resultChar[stepRemove + 1].state = ElementStates.Changing;
+                resultChar[stepRemove + 1].head = "head";
+                circleElements = resultChar.map((item => {
                     return (
                         <Circle index={item.index} letter={item.char} head={item.head} tail={item.tail}
                                 state={item.state} key={v4()}/>
                     )
                 }))
-                this.setState({elements: this.circleElements});
+                setElements(circleElements);
+                queue.dequeue();
             }
-            await this._timeout(500);
-            this.resultChar[this.stepRemove + 1].state = ElementStates.Default;
-            this.circleElements = this.resultChar.map((item => {
+            await timeout(500);
+
+            resultChar[stepRemove + 1].state = ElementStates.Default;
+            circleElements = resultChar.map((item => {
                 return (
                     <Circle index={item.index} letter={item.char} head={item.head} tail={item.tail} state={item.state}
                             key={v4()}/>
                 )
-            }))
-            this.stepRemove++;
-            this.setState({elements: this.circleElements});
-            this.setState({disable: ""});
-            this.setState({loader: ""});
-            this.setState({disable: ""});
+            }));
+            setElements(circleElements);
+            setLoaderBtnDel(false);
+            setDisabledBtn("disableOff");
+            stepRemove++;
         }
     }
 
-    clearQueue() {
-        this.stepAdd = 0;
-        this.stepRemove = 0;
-        this.resultChar.length = 0;
-        this.setState({elements: this.createItemsArr()});
-        this.setState({value: ""});
+    function clearQueue() {
+        setDisabledBtn("disableOn");
+        queue.clear();
+        stepAdd = 0;
+        stepRemove = 0;
+        resultChar.length = 0;
+        createItemsArr();
+        setDisabledBtn("disableOff");
     }
 
-    render() {
-        return (
-            <SolutionLayout title="Очередь">
-                <div className={styles.queue}>
-                    <div className={styles.queue__flexBox}>
-                        <div className={styles.queue__inputBox}>
-                            <Input placeholder={"Введите текст"} value={this.state.value} maxLength={4}
-                                   isLimitText={true}
-                                   onChange={this.handleChange}/>
-                        </div>
-                        <Button type={"button"} text={"Добавить"} linkedList={"small"}
-                                isLoader={this.state.loader === "enqueue"}
-                                disabled={(this.state.value.length === 0) || (this.state.disable === "dequeue")}
-                                onClick={() => this.enqueue(this.state.value)}/>
-                        <Button type={"button"} text={"Удалить"} linkedList={"small"}
-                                isLoader={this.state.loader === "dequeue"}
-                                disabled={(this.stepAdd === 0) || (this.state.disable === "enqueue")}
-                                onClick={() => this.dequeue()}/>
+    return (
+        <SolutionLayout title="Очередь">
+            <div className={styles.queue}>
+                <div className={styles.queue__flexBox}>
+                    <div className={styles.queue__inputBox}>
+                        <Input placeholder={"Введите текст"} value={value} maxLength={4}
+                               isLimitText={true}
+                               onChange={handleChange}/>
                     </div>
-                    <Button type={"button"} text={"Очистить"} linkedList={"small"}
-                            disabled={(this.state.disable !== "")}
-                            onClick={() => this.clearQueue()}/>
+                    <Button type={"button"} text={"Добавить"} linkedList={"small"}
+                            disabled={value.length === 0 || disabledBtn === "disableOn"}
+                            isLoader={loaderBtnAdd}
+                            onClick={() => enqueue(value)}/>
+                    <Button type={"button"} text={"Удалить"} linkedList={"small"}
+                            isLoader={loaderBtnDel}
+                            disabled={queue.size() === 0 || disabledBtn === "disableOn"}
+                            onClick={() => dequeue()}/>
                 </div>
-                <div className={styles.queue__itemsBox}>
-                    {this.state.elements}
-                </div>
-            </SolutionLayout>
-        )
-    }
+                <Button type={"button"} text={"Очистить"} linkedList={"small"}
+                        disabled={queue.size() === 0 || disabledBtn === "disableOn"}
+                        onClick={() => clearQueue()}/>
+            </div>
+            <div className={styles.queue__itemsBox}>
+                {elements}
+            </div>
+        </SolutionLayout>
+    )
 }

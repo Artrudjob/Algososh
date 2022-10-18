@@ -5,7 +5,7 @@ interface INodeList<T> {
     tail: LinkedListNode<T> | null;
 }
 
-export default class LinkedList<T> implements INodeList<T>{
+export default class LinkedList<T> implements INodeList<T> {
     public head: LinkedListNode<T> | null = null;
     public tail: LinkedListNode<T> | null = null;
 

@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {SolutionLayout} from "../ui/solution-layout/solution-layout";
 import styles from "./fibonacci.module.css";
 import {Input} from "../ui/input/input";
@@ -9,11 +9,11 @@ import {v4} from "uuid";
 import {timeout} from "../../utils/utils";
 
 export const FibonacciPage: React.FC = () => {
-    const [isValue, setValue] = React.useState<string>("");
-    const [loader, setLoader] = React.useState<boolean>(false);
-    const [disabled, setDisabled] = React.useState<boolean>(true);
-    const [isVisible, setVisible] = React.useState<boolean>(true);
-    const [elements, setElements] = React.useState<JSX.Element[]>([]);
+    const [isValue, setValue] = useState<string>("");
+    const [loader, setLoader] = useState<boolean>(false);
+    const [disabled, setDisabled] = useState<boolean>(true);
+    const [isVisible, setVisible] = useState<boolean>(true);
+    const [elements, setElements] = useState<JSX.Element[]>([]);
 
     function getFibonacciNumbers(n: number): number[] {
         let arr: number[] = [1, 1];

@@ -19,13 +19,15 @@ type TResultChar = {
 let resultChar: TResultChar[] = [];
 
 export const StackPage: React.FC = () => {
-    const [stack, setStack] = useState(new Stack());
+    /* TODO: переменная stack хука useState необходима для хранения экземпляра класса Stack,
+        в дальнейшем её состояние неизменяется
+     */
+    const [stack, setStack] = useState(new Stack()); // eslint-disable-line
     const [elements, setElements] = useState<JSX.Element[]>([]);
     const [value, setValue] = useState<string>("");
     const [disabledBtn, setDisabledBtn] = useState<string>("disableOff");
     const [loaderBtnAdd, setLoaderBtnAdd] = useState<boolean>(false);
     const [loaderBtnDel, setLoaderBtnDel] = useState<boolean>(false);
-    const [loaderBtnClear, setLoaderBtnClear] = useState<boolean>(false);
 
     let circleElements: JSX.Element[];
 
@@ -51,7 +53,7 @@ export const StackPage: React.FC = () => {
 
     async function addItem(item: string) {
         stack.push(item);
-        const itemsArray = stack.element();
+        const itemsArray = stack.toArray();
         const arraySize = stack.size();
 
         setLoaderBtnAdd(true);
@@ -109,7 +111,7 @@ export const StackPage: React.FC = () => {
 
         if (arraySize === 1) {
             resultChar.length = 0;
-            stack.element().forEach((el, index) => {
+            stack.toArray().forEach((el, index) => {
                 resultChar.push({
                     char: String(el),
                     state: ElementStates.Changing,
@@ -132,7 +134,7 @@ export const StackPage: React.FC = () => {
 
             stack.pop();
 
-            const itemsArray = stack.element();
+            const itemsArray = stack.toArray();
 
             resultChar.length = 0;
             itemsArray.forEach((el, index) => {
@@ -176,7 +178,6 @@ export const StackPage: React.FC = () => {
                 </div>
                 <Button type={"button"} text={"Очистить"} linkedList={"small"}
                         disabled={stack.size() === 0 || disabledBtn === "disableOn"}
-                        isLoader={loaderBtnClear}
                         onClick={() => clearArray()}/>
             </div>
             <div className={styles.stack__itemsBox}>

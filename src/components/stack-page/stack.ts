@@ -23,7 +23,7 @@ export class Stack<T> implements IStack<T> {
         this.storage.length = 0;
     }
 
-    element() {
+    toArray() {
         return this.storage;
     }
 
