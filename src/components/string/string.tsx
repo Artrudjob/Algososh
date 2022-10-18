@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import styles from "./string.module.css";
 import {SolutionLayout} from "../ui/solution-layout/solution-layout";
 import {Input} from "../ui/input/input";
@@ -9,12 +9,11 @@ import {v4} from "uuid";
 
 export const StringComponent: React.FC = (): JSX.Element => {
 
-    const [isValue, setValue] = React.useState<string>("");
-    const [loader, setLoader] = React.useState<boolean>(false);
-    const [disabled, setDisabled] = React.useState<boolean>(true);
-    const [isVisible, setVisible] = React.useState<boolean>(true);
-
-    const [elements, setElements] = React.useState<JSX.Element[]>([]);
+    const [isValue, setValue] = useState<string>("");
+    const [loader, setLoader] = useState<boolean>(false);
+    const [disabled, setDisabled] = useState<boolean>(true);
+    const [isVisible, setVisible] = useState<boolean>(true);
+    const [elements, setElements] = useState<JSX.Element[]>([]);
 
     // @ts-ignore
     let resultChar: [{
@@ -108,7 +107,8 @@ export const StringComponent: React.FC = (): JSX.Element => {
                 <div className={styles.string__inputBox}>
                     <Input maxLength={11} isLimitText={true} value={isValue} onChange={handleChange}/>
                 </div>
-                <Button text={"Развернуть"} type={"button"} isLoader={loader} disabled={disabled} onClick={handleBtnClick}/>
+                <Button text={"Развернуть"} type={"button"} isLoader={loader} disabled={disabled}
+                        onClick={handleBtnClick}/>
             </div>
             {!isVisible &&
                 <div className={styles.string__flex}>
