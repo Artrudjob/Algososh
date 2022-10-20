@@ -7,6 +7,11 @@ import {Circle} from "../ui/circle/circle";
 import {ElementStates} from "../../types/element-states";
 import {v4} from "uuid";
 
+type TResultChar = {
+    letter: string;
+    state: ElementStates;
+}
+
 export const StringComponent: React.FC = (): JSX.Element => {
 
     const [isValue, setValue] = useState<string>("");
@@ -15,11 +20,7 @@ export const StringComponent: React.FC = (): JSX.Element => {
     const [isVisible, setVisible] = useState<boolean>(true);
     const [elements, setElements] = useState<JSX.Element[]>([]);
 
-    // @ts-ignore
-    let resultChar: [{
-        letter: string;
-        state: ElementStates | undefined;
-    }] = [];
+    let resultChar: TResultChar[] = [];
 
     function handleChange(event: React.ChangeEvent<HTMLInputElement>): void {
         setValue(event.target.value);

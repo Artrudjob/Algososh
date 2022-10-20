@@ -3,6 +3,7 @@ interface IStack<T> {
     pop(): T | undefined;
     clear(): void;
     size(): number;
+    toArray(): T[];
 }
 
 export class Stack<T> implements IStack<T> {

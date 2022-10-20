@@ -191,7 +191,7 @@ export const SortingPage: React.FC = () => {
             })
         });
 
-        let columnElements: JSX.Element[] = resultNumber.map(item => {
+        const columnElements: JSX.Element[] = resultNumber.map(item => {
             return (
                 <Column index={item.number} state={item.state} key={v4()} extraClass={styles.sort__column}/>
             )

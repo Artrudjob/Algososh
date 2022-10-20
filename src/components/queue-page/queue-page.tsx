@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useMemo} from "react";
 import styles from "./queue.module.css";
 import {Queue} from "./queue";
 import {Input} from "../ui/input/input";
@@ -22,10 +22,8 @@ let stepAdd = 0;
 let stepRemove = 0;
 
 export const QueuePage: React.FC = () => {
-    /* TODO: переменная queue хука useState необходима для хранения экземпляра класса Queue, в дальнейшем её
-        состояние неизменяется
-     */
-    const [queue, setQueue] = useState(new Queue()); // eslint-disable-line
+
+    const queue = useMemo(() => new Queue(), []);
     const [elements, setElements] = useState<JSX.Element[]>([]);
     const [value, setValue] = useState<string>("");
     const [disabledBtn, setDisabledBtn] = useState<string>("disableOff");

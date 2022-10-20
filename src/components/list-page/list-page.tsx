@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useMemo} from "react";
 import styles from "./list.module.css"
 import {SolutionLayout} from "../ui/solution-layout/solution-layout";
 import {Input} from "../ui/input/input";
@@ -22,9 +22,9 @@ let resultNodes: TResultNodes[] = [];
 
 export const ListPage: React.FC = () => {
 
-    const randomArr = () => {
+    const randomArr = (): LinkedList<string> => {
         const amountElement = getRandomNumber(4, 6);
-        const arrNumbers: LinkedList<any> = new LinkedList();
+        const arrNumbers: LinkedList<string> = new LinkedList();
 
         for (let i = 0; i <= amountElement; i++) {
           arrNumbers.prepend(getRandomNumber(0, 10000).toString());
@@ -33,12 +33,9 @@ export const ListPage: React.FC = () => {
         return arrNumbers;
     }
 
+    const linkedList = useMemo(() => randomArr(), []);
     const [value, setValue] = useState<string>("");
     const [indexValue, setIndexValue] = useState<string>("");
-    /* TODO: переменная linkedList хука useState необходима для хранения экземпляра класса LinkedList,
-        в дальнейшем её состояние неизменяется
-     */
-    const [linkedList, setLinkedList] = useState<LinkedList<string>>(randomArr); // eslint-disable-line
     const [elements, setElements] = useState<JSX.Element[]>([]);
     const [disabledBtn, setDisabledBtn] = useState<string>("disableOff");
     const [loaderAddHead, setLoaderAddHead] = useState<boolean>(false);
@@ -49,6 +46,7 @@ export const ListPage: React.FC = () => {
     const [loaderDelByIndex, setLoaderDelByIndex] = useState<boolean>(false);
 
     let circleElements: JSX.Element[];
+
 
     // TODO: хук useEffect должен срабатывать только при монтировании и размантировании страницы
     useEffect(() => {

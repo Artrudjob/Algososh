@@ -9,6 +9,7 @@ import {v4} from "uuid";
 import {timeout} from "../../utils/utils";
 
 export const FibonacciPage: React.FC = () => {
+
     const [isValue, setValue] = useState<string>("");
     const [loader, setLoader] = useState<boolean>(false);
     const [disabled, setDisabled] = useState<boolean>(true);
@@ -16,7 +17,7 @@ export const FibonacciPage: React.FC = () => {
     const [elements, setElements] = useState<JSX.Element[]>([]);
 
     function getFibonacciNumbers(n: number): number[] {
-        let arr: number[] = [1, 1];
+        const arr: number[] = [1, 1];
         for (let i = 2; i < n + 1; i++) {
             arr.push(arr[i - 2] + arr[i - 1])
         }
@@ -48,7 +49,7 @@ export const FibonacciPage: React.FC = () => {
         while (i <= arr.length - 1) {
             newArr.push(arr[i]);
             await timeout(1000);
-            let circleElement = newArr.map((item, index) => {
+            const circleElement = newArr.map((item, index) => {
                 return (
                     <div key={v4()}>
                         <Circle letter={String(item)} state={ElementStates.Default}/>

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useMemo} from "react";
 import styles from "./stack.module.css";
 import {ElementStates} from "../../types/element-states";
 import {SolutionLayout} from "../ui/solution-layout/solution-layout";
@@ -19,10 +19,8 @@ type TResultChar = {
 let resultChar: TResultChar[] = [];
 
 export const StackPage: React.FC = () => {
-    /* TODO: переменная stack хука useState необходима для хранения экземпляра класса Stack,
-        в дальнейшем её состояние неизменяется
-     */
-    const [stack, setStack] = useState(new Stack()); // eslint-disable-line
+
+    const stack = useMemo(() => new Stack(), []);
     const [elements, setElements] = useState<JSX.Element[]>([]);
     const [value, setValue] = useState<string>("");
     const [disabledBtn, setDisabledBtn] = useState<string>("disableOff");
