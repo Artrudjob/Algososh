@@ -8,6 +8,7 @@ import {Column} from "../ui/column/column";
 import {Direction} from "../../types/direction";
 import {ElementStates} from "../../types/element-states";
 import {v4} from "uuid";
+import {timeout, swap} from "../../utils/utils";
 
 type TResultNumber = {
   number: number;
@@ -40,16 +41,6 @@ export const SortingPage: React.FC = () => {
 
         setResultArr(arrNumbers);
         return arrNumbers;
-    }
-
-    function timeout(ms: number) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
-
-    function swap(arr: number[], firstIndex: number, secondIndex: number): void {
-        const temp = arr[firstIndex];
-        arr[firstIndex] = arr[secondIndex];
-        arr[secondIndex] = temp;
     }
 
     function changeLoaderState(ascending: boolean): void {

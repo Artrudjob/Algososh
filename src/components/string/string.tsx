@@ -6,6 +6,7 @@ import {Button} from "../ui/button/button";
 import {Circle} from "../ui/circle/circle";
 import {ElementStates} from "../../types/element-states";
 import {v4} from "uuid";
+import {timeout, swap} from "../../utils/utils";
 
 type TResultChar = {
     letter: string;
@@ -30,16 +31,6 @@ export const StringComponent: React.FC = (): JSX.Element => {
         } else {
             setDisabled(false);
         }
-    }
-
-    function timeout(ms: number) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
-
-    function swap(arr: string[], firstIndex: number, secondIndex: number): void {
-        const temp = arr[firstIndex];
-        arr[firstIndex] = arr[secondIndex];
-        arr[secondIndex] = temp;
     }
 
     async function handleBtnClick(): Promise<void> {

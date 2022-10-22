@@ -24,11 +24,13 @@ export const ListPage: React.FC = () => {
 
     const randomArr = (): LinkedList<string> => {
         const amountElement = getRandomNumber(4, 6);
-        const arrNumbers: LinkedList<string> = new LinkedList();
+        const array = [];
 
         for (let i = 0; i <= amountElement; i++) {
-          arrNumbers.prepend(getRandomNumber(0, 10000).toString());
+            array.push(getRandomNumber(0, 10000).toString());
         }
+
+        const arrNumbers = new LinkedList(array);
 
         return arrNumbers;
     }

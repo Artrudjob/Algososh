@@ -8,6 +8,15 @@ interface INodeList<T> {
 export default class LinkedList<T> implements INodeList<T> {
     public head: LinkedListNode<T> | null = null;
     public tail: LinkedListNode<T> | null = null;
+    constructor(values?: T[]) {
+            if (values?.length) {
+                this.appendFromArray(values)
+            }
+    }
+
+    private appendFromArray(values: T[]) {
+        values.forEach((value) => this.append(value));
+    }
 
     prepend(item: T): LinkedList<T> {
         const newNode = new LinkedListNode(item, this.head);
