@@ -7,7 +7,7 @@ import {Circle} from "../ui/circle/circle";
 import {ElementStates} from "../../types/element-states";
 import {v4} from "uuid";
 import {timeout} from "../../utils/utils";
-import {getFibonacciNumbers} from "../../utils/utils";
+import {getFibonacciNumbers} from "../../utils/fibonacci-page/utils";
 
 export const FibonacciPage: React.FC = () => {
 
