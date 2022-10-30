@@ -7,6 +7,10 @@ export function timeout(ms: number) {
 }
 
 export function swap(arr: string[] | number[], firstIndex: number, secondIndex: number): void {
+    if (arr.length === 0) {
+        return;
+    }
+
     const temp = arr[firstIndex];
     arr[firstIndex] = arr[secondIndex];
     arr[secondIndex] = temp;

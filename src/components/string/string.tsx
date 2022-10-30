@@ -60,6 +60,7 @@ export const StringComponent: React.FC = (): JSX.Element => {
             setElements([
                 <Circle letter={arr[0]} state={ElementStates.Modified} key={v4()}/>
             ])
+            setLoader(false);
         } else {
             while (start <= end) {
                 resultChar[start].state = ElementStates.Changing;
@@ -99,7 +100,7 @@ export const StringComponent: React.FC = (): JSX.Element => {
                 <div className={styles.string__inputBox}>
                     <Input maxLength={11} isLimitText={true} value={isValue} onChange={handleChange}/>
                 </div>
-                <Button text={"Развернуть"} type={"button"} isLoader={loader} disabled={disabled}
+                <Button data-testid={"button"} text={"Развернуть"} type={"button"} isLoader={loader} disabled={disabled}
                         onClick={handleBtnClick}/>
             </div>
             {!isVisible &&
