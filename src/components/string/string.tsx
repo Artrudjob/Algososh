@@ -18,7 +18,6 @@ export const StringComponent: React.FC = (): JSX.Element => {
     const [isValue, setValue] = useState<string>("");
     const [loader, setLoader] = useState<boolean>(false);
     const [disabled, setDisabled] = useState<boolean>(true);
-    const [isVisible, setVisible] = useState<boolean>(true);
     const [elements, setElements] = useState<JSX.Element[]>([]);
 
     let resultChar: TResultChar[] = [];
@@ -27,7 +26,6 @@ export const StringComponent: React.FC = (): JSX.Element => {
         setValue(event.target.value);
         if (event.target.value.length === 0) {
             setDisabled(true);
-            setVisible(true);
         } else {
             setDisabled(false);
         }
@@ -35,7 +33,6 @@ export const StringComponent: React.FC = (): JSX.Element => {
 
     async function handleBtnClick(): Promise<void> {
         setLoader(true);
-        setVisible(false);
 
         const arr = isValue.toUpperCase().split('');
 
@@ -98,16 +95,14 @@ export const StringComponent: React.FC = (): JSX.Element => {
         <SolutionLayout title="Строка">
             <div className={styles.string__box}>
                 <div className={styles.string__inputBox}>
-                    <Input maxLength={11} isLimitText={true} value={isValue} onChange={handleChange}/>
+                    <Input data-cy={"input"} maxLength={11} isLimitText={true} value={isValue} onChange={handleChange}/>
                 </div>
-                <Button data-testid={"button"} text={"Развернуть"} type={"button"} isLoader={loader} disabled={disabled}
+                <Button data-cy={"button"} text={"Развернуть"} type={"button"} isLoader={loader} disabled={disabled}
                         onClick={handleBtnClick}/>
             </div>
-            {!isVisible &&
-                <div className={styles.string__flex}>
-                    {elements}
-                </div>
-            }
+            <div className={styles.string__flex} id={"elements"}>
+                {elements}
+            </div>s
         </SolutionLayout>
     );
 }
