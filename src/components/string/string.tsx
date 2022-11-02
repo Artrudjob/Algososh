@@ -102,7 +102,7 @@ export const StringComponent: React.FC = (): JSX.Element => {
             </div>
             <div className={styles.string__flex} id={"elements"}>
                 {elements}
-            </div>s
+            </div>
         </SolutionLayout>
     );
 }
