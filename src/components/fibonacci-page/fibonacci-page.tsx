@@ -59,10 +59,11 @@ export const FibonacciPage: React.FC = () => {
         <SolutionLayout title="Последовательность Фибоначчи">
             <div className={styles.fibonacci__box}>
                 <div className={styles.fibonacci__inputBox}>
-                    <Input isLimitText={true} maxLength={2} min={0} max={19} value={isValue} onChange={handleChange}
+                    <Input data-cy={"input"} isLimitText={true} maxLength={2} min={0} max={19} value={isValue}
+                           onChange={handleChange}
                            type={"number"}/>
                 </div>
-                <Button text={"Рассчитать"} type={"button"} isLoader={loader} disabled={disabled}
+                <Button data-cy={"button"} text={"Рассчитать"} type={"button"} isLoader={loader} disabled={disabled}
                         onClick={handleBtnClick} extraClass={"ml-6"} linkedList={"small"}/>
             </div>
             {!isVisible &&
