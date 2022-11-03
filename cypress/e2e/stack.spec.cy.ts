@@ -1,5 +1,4 @@
 import * as cypress from "cypress";
-import {wait} from "@testing-library/user-event/dist/utils";
 
 describe("Stack Work Is Correct", () => {
     beforeEach(() => {
@@ -20,7 +19,7 @@ describe("Stack Work Is Correct", () => {
         cy.get('[data-cy="circle"]').should("have.text", "A");
         cy.get('[data-cy="circle"]').should("have.css", "border-color", "rgb(210, 82, 225)");
 
-        wait(500);
+        cy.wait(500);
 
         cy.get('[data-cy="circle"]').should("have.css", "border-color", "rgb(0, 50, 255)");
     });
@@ -34,7 +33,7 @@ describe("Stack Work Is Correct", () => {
 
         cy.get('[data-cy="circle"]').should("have.css", "border-color", "rgb(210, 82, 225)");
 
-        wait(500);
+        cy.wait(500);
 
         cy.get('[data-cy="circle"]').should("not.exist");
     });
