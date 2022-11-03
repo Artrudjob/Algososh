@@ -182,19 +182,23 @@ export const QueuePage: React.FC = () => {
                 <div className={styles.queue__flexBox}>
                     <div className={styles.queue__inputBox}>
                         <Input placeholder={"Введите текст"} value={value} maxLength={4}
+                               data-cy={"input"}
                                isLimitText={true}
                                onChange={handleChange}/>
                     </div>
                     <Button type={"button"} text={"Добавить"} linkedList={"small"}
+                            data-cy={"addBtn"}
                             disabled={value.length === 0 || disabledBtn === "disableOn"}
                             isLoader={loaderBtnAdd}
                             onClick={() => enqueue(value)}/>
                     <Button type={"button"} text={"Удалить"} linkedList={"small"}
+                            data-cy={"delBtn"}
                             isLoader={loaderBtnDel}
                             disabled={queue.size() === 0 || disabledBtn === "disableOn"}
                             onClick={() => dequeue()}/>
                 </div>
                 <Button type={"button"} text={"Очистить"} linkedList={"small"}
+                        data-cy={"clearBtn"}
                         disabled={queue.size() === 0 || disabledBtn === "disableOn"}
                         onClick={() => clearQueue()}/>
             </div>
