@@ -162,19 +162,23 @@ export const StackPage: React.FC = () => {
             <div className={styles.stack}>
                 <div className={styles.stack__flexBox}>
                     <div className={styles.stack__inputBox}>
-                        <Input placeholder={"Введите текст"} value={value} maxLength={4} isLimitText={true}
+                        <Input data-cy={"input"} placeholder={"Введите текст"} value={value} maxLength={4}
+                               isLimitText={true}
                                onChange={handleChange}/>
                     </div>
                     <Button type={"button"} text={"Добавить"} linkedList={"small"}
+                            data-cy={"addBtn"}
                             disabled={value.length === 0 || disabledBtn === "disableOn"}
                             isLoader={loaderBtnAdd}
                             onClick={() => addItem(value)}/>
                     <Button type={"button"} text={"Удалить"} linkedList={"small"}
+                            data-cy={"delBtn"}
                             disabled={stack.size() === 0 || disabledBtn === "disableOn"}
                             isLoader={loaderBtnDel}
                             onClick={() => delItem()}/>
                 </div>
                 <Button type={"button"} text={"Очистить"} linkedList={"small"}
+                        data-cy={"clearBtn"}
                         disabled={stack.size() === 0 || disabledBtn === "disableOn"}
                         onClick={() => clearArray()}/>
             </div>
