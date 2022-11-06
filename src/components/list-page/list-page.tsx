@@ -5,7 +5,7 @@ import {Input} from "../ui/input/input";
 import {Button} from "../ui/button/button";
 import {Circle} from "../ui/circle/circle";
 import {ArrowIcon} from "../ui/icons/arrow-icon";
-import {getRandomNumber, timeout} from "../../utils/utils";
+import {timeout} from "../../utils/utils";
 import {v4} from "uuid";
 import LinkedListNode from "./linkedListNode";
 import {ElementStates} from "../../types/element-states";
@@ -22,20 +22,15 @@ let resultNodes: TResultNodes[] = [];
 
 export const ListPage: React.FC = () => {
 
-    const randomArr = (): LinkedList<string> => {
-        const amountElement = getRandomNumber(4, 6);
-        const array = [];
-
-        for (let i = 0; i <= amountElement; i++) {
-            array.push(getRandomNumber(0, 10000).toString());
-        }
+    const getStringsArr = (): LinkedList<string> => {
+        const array = ["85", "13", "34", "1"];
 
         const arrNumbers = new LinkedList(array);
 
         return arrNumbers;
     }
 
-    const linkedList = useMemo(() => randomArr(), []);
+    const linkedList = useMemo(() => getStringsArr(), []);
     const [value, setValue] = useState<string>("");
     const [indexValue, setIndexValue] = useState<string>("");
     const [elements, setElements] = useState<JSX.Element[]>([]);
@@ -409,38 +404,46 @@ export const ListPage: React.FC = () => {
             <div className={styles.list}>
                 <div>
                     <Input placeholder={"Введите значение"} maxLength={4} isLimitText={true} value={value}
+                         data-cy={"input"}
                          onChange={handleChangeValue}/>
                 </div>
                 <Button type={"button"} text={"Добавить в head"} linkedList={"small"}
+                        data-cy={"addHeadBtn"}
                         isLoader={loaderAddHead}
                         disabled={value.length === 0 || disabledBtn === "disabledOn"}
                         onClick={() => addHead(value)}
                 />
                 <Button type={"button"} text={"Добавить в tail"} linkedList={"small"}
+                        data-cy={"addTailBtn"}
                         isLoader={loaderAddTail}
                         disabled={value.length === 0 || disabledBtn === "disabledOn"}
                         onClick={() => addTail(value)}
                 />
                 <Button type={"button"} text={"Удалить из head"} linkedList={"small"}
+                        data-cy={"delHeadBtn"}
                         isLoader={loaderDelHead}
                         disabled={linkedList.toArray().length === 0 || disabledBtn === "disabledOn"}
                         onClick={() => deleteHead()}
                 />
                 <Button type={"button"} text={"Удалить из tail"} linkedList={"small"}
+                        data-cy={"delTailBtn"}
                         isLoader={loaderDelTail}
                         disabled={linkedList.toArray().length === 0 || disabledBtn === "disabledOn"}
                         onClick={() => deleteTail()}
                 />
                 <div>
                   <Input placeholder={"Введите индекс"} value={indexValue}
+                         data-cy={"indexInput"}
                          type={"text"} onChange={handleChangeIndexValue}/>
                 </div>
                 <Button type={"button"} text={"Добавить по индексу"} linkedList={"big"}
+                        data-cy={"addIndexBtn"}
                         isLoader={loaderAddByIndex}
                         disabled={value.length === 0 || indexValue.length === 0 || disabledBtn === "disabledOn"}
                         onClick={() => addByIndex(value, indexValue)}
                 />
                 <Button type={"button"} text={"Удалить по индексу"} linkedList={"big"}
+                        data-cy={"delIndexBtn"}
                         isLoader={loaderDelByIndex}
                         disabled={linkedList.toArray().length === 0 ||
                             indexValue.length === 0 ||
