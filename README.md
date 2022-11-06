@@ -14,6 +14,7 @@
 ## Инструкция по развёртыванию: 
 * npm start - react-scripts start
 * npm run test - react-scripts test
+* npm run cypress:open - E2E-test
 
 ### Демонстрация компонента StringComponent:
 ![string](https://user-images.githubusercontent.com/71271134/198006288-5b1a03ca-adf0-4409-b842-9cde9608f8cb.gif)
