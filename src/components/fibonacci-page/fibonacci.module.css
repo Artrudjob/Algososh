@@ -1,0 +1,26 @@
+.fibonacci__box {
+    /*width: 29.5%;*/
+    width: 1240px;
+    margin: 48px auto 0 auto;
+    display: flex;
+    justify-content: center;
+}
+
+.fibonacci__inputBox {
+    width: 377px;
+}
+
+.fibonacci__flex {
+    width: 1000px;
+    margin: 80px auto 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 48px 16px;
+}
+
+.fibonacci__number {
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 22px;
+}

@@ -1,0 +1,25 @@
+.list {
+    width: 985px;
+    margin: 0 auto;
+    display: flex;
+
+    flex-wrap: wrap;
+    gap: 12px 12px;
+}
+
+.list__linkedList {
+    width: 1300px;
+    margin: 55px auto 0 auto;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.list__flexBox {
+    margin-top: 35px;
+    margin-right: 22px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 25px;
+}
